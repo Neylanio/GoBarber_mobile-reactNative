@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 import { Platform } from 'react-native';
+import { Form as FormMobile } from '@unform/mobile';
 
 export const Container = styled.View`
   flex: 1;
@@ -13,6 +14,10 @@ export const Title = styled.Text`
   color: #F4EDE8;
   font-family: 'RobotoSlab-Medium';
   margin: 64px 0 24px;
+`;
+
+export const Form = styled(FormMobile)`
+  width: 100%;
 `;
 
 export const ForgotPassword = styled.TouchableOpacity`
