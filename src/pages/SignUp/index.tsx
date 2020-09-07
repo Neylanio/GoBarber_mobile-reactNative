@@ -1,9 +1,11 @@
-import React, { useRef } from 'react';
-import { Image, KeyboardAvoidingView, Platform, ScrollView, TextInput } from 'react-native';
+import React, { useRef, useCallback } from 'react';
+import { Image, KeyboardAvoidingView, Platform, ScrollView, TextInput, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import { FormHandles } from '@unform/core';
+import * as Yup from 'yup';
 
+import getValidationErrors from '../../utils/getValidationErros';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
@@ -11,12 +13,61 @@ import logoImg from '../../assets/logo.png';
 
 import { Container, Title, Form, BackToSignIn, BackToSignInText } from './styles';
 
+interface SignUpFormData {
+  name: string;
+  email: string;
+  password: string;
+}
+
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const navigation = useNavigation();
 
   const emailInputRef = useRef<TextInput>(null);
   const passwordInputRef = useRef<TextInput>(null);
+
+  const handleSignUp = useCallback(async (data: SignUpFormData) => {
+    try {
+      formRef.current?.setErrors({});
+
+      const schema = Yup.object().shape({
+        name: Yup.string().required('Nome obrigatório'),
+        email: Yup.string().required('E-mail obrigatório').email('Digite um e-mail válido'),
+        password: Yup.string().min(6, 'Mínimo de 6 dígitos'),
+      });
+
+      await schema.validate(data, {
+        abortEarly: false,
+      });
+
+      // await api.post('users', data);
+
+      // history.push('/');
+
+      // addToast({
+      //   type: 'success',
+      //   title: 'Usuário cadastrado com sucesso',
+      //   description: 'Você já pode fazer o seu Logon no GoBarber',
+      // });
+
+      Alert.alert('Usuário cadastrado com sucesso', 'Você já pode fazer o seu Logon no GoBarber');
+
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(error);
+        formRef.current?.setErrors(errors);
+
+        return;
+      }
+      // addToast({
+      //   type: 'error',
+      //   title: 'Erro no Cadastro',
+      //   description: 'Ocorreu um erro ao fazer cadastro, tente novamente',
+      // });
+      Alert.alert('Erro no Cadastro', 'Ocorreu um erro ao fazer cadastro, tente novamente');
+    }
+  // }, [addToast, history]);
+  }, []);
 
   return (
     <>
@@ -34,7 +85,7 @@ const SignUp: React.FC = () => {
 
             <Title>Crie sua conta</Title>
 
-            <Form ref={formRef} onSubmit={(data) => {console.log(data)}}>
+            <Form ref={formRef} onSubmit={handleSignUp}>
               <Input
                 autoCapitalize="words"
                 name="name"
