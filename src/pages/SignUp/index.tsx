@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
+import api from '../../services/api';
 
 import getValidationErrors from '../../utils/getValidationErros';
 import Input from '../../components/Input';
@@ -40,9 +41,9 @@ const SignUp: React.FC = () => {
         abortEarly: false,
       });
 
-      // await api.post('users', data);
+      await api.post('users', data);
 
-      // history.push('/');
+      navigation.goBack();
 
       // addToast({
       //   type: 'success',
@@ -64,10 +65,11 @@ const SignUp: React.FC = () => {
       //   title: 'Erro no Cadastro',
       //   description: 'Ocorreu um erro ao fazer cadastro, tente novamente',
       // });
+      console.log(error);
       Alert.alert('Erro no Cadastro', 'Ocorreu um erro ao fazer cadastro, tente novamente');
     }
   // }, [addToast, history]);
-  }, []);
+  }, [navigation]);
 
   return (
     <>
