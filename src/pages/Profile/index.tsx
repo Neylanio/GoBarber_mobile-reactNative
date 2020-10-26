@@ -7,6 +7,6 @@ const Profile: React.FC = () => {
       <Text>Profile page</Text>
     </View>
   );
-}
+};
 
 export default Profile;

@@ -4,7 +4,22 @@ import Icon from 'react-native-vector-icons/Feather';
 import { useAuth } from '../../hooks/auth';
 import api from '../../services/api';
 
-import { Container, Header, HeaderTitle, UserName, ProfileButton, UserAvatar, ProvidersList, ProvidersListTitle, ProviderContainer, ProviderAvatar,ProviderInfo,ProviderName, ProviderMeta, ProviderMetaText  } from './styles';
+import {
+  Container,
+  Header,
+  HeaderTitle,
+  UserName,
+  ProfileButton,
+  UserAvatar,
+  ProvidersList,
+  ProvidersListTitle,
+  ProviderContainer,
+  ProviderAvatar,
+  ProviderInfo,
+  ProviderName,
+  ProviderMeta,
+  ProviderMetaText,
+} from './styles';
 
 export interface Provider {
   id: string;
@@ -19,41 +34,49 @@ const Dashboard: React.FC = () => {
   const { navigate } = useNavigation();
 
   const navigateToProfile = useCallback(() => {
-    navigate('Profile');
-  }, [navigate])
+    // navigate('Profile');
+    signOut();
+  }, [signOut]);
 
   useEffect(() => {
-    api.get('providers')
-      .then(response => {
-        setProviders(response.data);
-      });
+    api.get('providers').then(response => {
+      setProviders(response.data);
+    });
   }, []);
 
-  const navigateToCreateAppointment = useCallback((providerId: string) => {
-    navigate('CreateAppointment', {providerId});
-  }, [navigate]);
+  const navigateToCreateAppointment = useCallback(
+    (providerId: string) => {
+      navigate('CreateAppointment', { providerId });
+    },
+    [navigate],
+  );
 
   return (
     <Container>
       <Header>
         <HeaderTitle>
-          Bem vindo, {"\n"}
+          Bem vindo,
+          {'\n'}
           <UserName>{user.name}</UserName>
         </HeaderTitle>
 
         <ProfileButton onPress={navigateToProfile}>
-          <UserAvatar source={{ uri: user.avatar_url }}/>
+          <UserAvatar source={{ uri: user.avatar_url }} />
         </ProfileButton>
       </Header>
 
       <ProvidersList
         data={providers}
-        keyExtractor={(provider) => provider.id}
+        keyExtractor={provider => provider.id}
         ListHeaderComponent={
           <ProvidersListTitle>Cabeleireiros</ProvidersListTitle>
         }
         renderItem={({ item: provider }) => (
-          <ProviderContainer onPress={() => {navigateToCreateAppointment(provider.id)}}>
+          <ProviderContainer
+            onPress={() => {
+              navigateToCreateAppointment(provider.id);
+            }}
+          >
             <ProviderAvatar source={{ uri: provider.avatar_url }} />
 
             <ProviderInfo>
@@ -74,6 +97,6 @@ const Dashboard: React.FC = () => {
       />
     </Container>
   );
-}
+};
 
 export default Dashboard;

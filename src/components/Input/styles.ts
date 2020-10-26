@@ -19,14 +19,17 @@ export const Container = styled.View<ContainerProps>`
   flex-direction: row;
   align-items: center;
 
-  ${props => props.isErrored && css`
-    border-color: #c53030;
-  `}
+  ${props =>
+    props.isErrored &&
+    css`
+      border-color: #c53030;
+    `}
 
-  ${props => props.isFocused && css`
-    border-color: #ff9000;
-  `}
-
+  ${props =>
+    props.isFocused &&
+    css`
+      border-color: #ff9000;
+    `}
 `;
 
 export const Icon = styled(FeatherIcon)`
@@ -38,5 +41,4 @@ export const TextInput = styled.TextInput`
   color: #fff;
   font-size: 16px;
   font-family: 'RobotoSlab-Regular';
-
 `;

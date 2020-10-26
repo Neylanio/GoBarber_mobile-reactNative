@@ -1,6 +1,13 @@
 import React, { useRef, useCallback } from 'react';
-import { Image, KeyboardAvoidingView, Platform, ScrollView, TextInput, Alert} from 'react-native';
-import Icon from 'react-native-vector-icons/Feather'
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TextInput,
+  Alert,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
@@ -12,7 +19,15 @@ import Button from '../../components/Button';
 
 import logoImg from '../../assets/logo.png';
 
-import { Container, Title, Form, ForgotPassword, ForgotPasswordText, CreateAccountButton, CreateAccountButtonText } from './styles';
+import {
+  Container,
+  Title,
+  Form,
+  ForgotPassword,
+  ForgotPasswordText,
+  CreateAccountButton,
+  CreateAccountButtonText,
+} from './styles';
 
 interface SignInFormData {
   email: string;
@@ -30,7 +45,9 @@ const SignIn: React.FC = () => {
       formRef.current?.setErrors({});
 
       const schema = Yup.object().shape({
-        email: Yup.string().required('E-mail obrigatório').email('Digite um e-mail válido'),
+        email: Yup.string()
+          .required('E-mail obrigatório')
+          .email('Digite um e-mail válido'),
         password: Yup.string().required('Senha obrigatória'),
       });
 
@@ -49,8 +66,7 @@ const SignIn: React.FC = () => {
       //   type: 'success',
       //   title: 'Usuário logado',
       // });
-      Alert.alert('Usuário logado');
-
+      // Alert.alert('Usuário logado');
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
         const errors = getValidationErrors(error);
@@ -64,16 +80,19 @@ const SignIn: React.FC = () => {
       //   description: 'Ocorreu um erro ao fazer login, verifique as credenciais',
       // });
 
-      Alert.alert('Erro na Autenticação', 'Ocorreu um erro ao fazer login, verifique as credenciais');
+      Alert.alert(
+        'Erro na Autenticação',
+        'Ocorreu um erro ao fazer login, verifique as credenciais',
+      );
     }
-  // }, [signIn, addToast, history]);
+    // }, [signIn, addToast, history]);
   }, []);
 
   return (
     <>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={ Platform.OS === 'ios' ? 'padding' : undefined }
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         enabled
       >
         <ScrollView
@@ -86,7 +105,6 @@ const SignIn: React.FC = () => {
             <Title>Faça seu Logon</Title>
 
             <Form ref={formRef} onSubmit={handleSignIn}>
-
               <Input
                 autoCorrect={false}
                 autoCapitalize="none"
@@ -108,31 +126,40 @@ const SignIn: React.FC = () => {
                 placeholder="Senha"
                 returnKeyType="send"
                 onSubmitEditing={() => {
-                  formRef.current?.submitForm()
+                  formRef.current?.submitForm();
                 }}
               />
 
               <Button
                 onPress={() => {
-                  formRef.current?.submitForm()
+                  formRef.current?.submitForm();
                 }}
               >
-                Entrar</Button>
+                Entrar
+              </Button>
             </Form>
 
-            <ForgotPassword onPress={() => {console.log("")}}>
+            <ForgotPassword
+              onPress={() => {
+                console.log('');
+              }}
+            >
               <ForgotPasswordText>Esqueci minha senha</ForgotPasswordText>
             </ForgotPassword>
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>
 
-      <CreateAccountButton onPress={() => {navigation.navigate('SignUp')}}>
+      <CreateAccountButton
+        onPress={() => {
+          navigation.navigate('SignUp');
+        }}
+      >
         <Icon name="log-in" size={20} color="#ff9000" />
         <CreateAccountButtonText>Criar uma conta</CreateAccountButtonText>
       </CreateAccountButton>
     </>
   );
-}
+};
 
 export default SignIn;

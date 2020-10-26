@@ -1,5 +1,12 @@
 import React, { useRef, useCallback } from 'react';
-import { Image, KeyboardAvoidingView, Platform, ScrollView, TextInput, Alert } from 'react-native';
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TextInput,
+  Alert,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import { FormHandles } from '@unform/core';
@@ -12,7 +19,13 @@ import Button from '../../components/Button';
 
 import logoImg from '../../assets/logo.png';
 
-import { Container, Title, Form, BackToSignIn, BackToSignInText } from './styles';
+import {
+  Container,
+  Title,
+  Form,
+  BackToSignIn,
+  BackToSignInText,
+} from './styles';
 
 interface SignUpFormData {
   name: string;
@@ -27,55 +40,65 @@ const SignUp: React.FC = () => {
   const emailInputRef = useRef<TextInput>(null);
   const passwordInputRef = useRef<TextInput>(null);
 
-  const handleSignUp = useCallback(async (data: SignUpFormData) => {
-    try {
-      formRef.current?.setErrors({});
+  const handleSignUp = useCallback(
+    async (data: SignUpFormData) => {
+      try {
+        formRef.current?.setErrors({});
 
-      const schema = Yup.object().shape({
-        name: Yup.string().required('Nome obrigatório'),
-        email: Yup.string().required('E-mail obrigatório').email('Digite um e-mail válido'),
-        password: Yup.string().min(6, 'Mínimo de 6 dígitos'),
-      });
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Nome obrigatório'),
+          email: Yup.string()
+            .required('E-mail obrigatório')
+            .email('Digite um e-mail válido'),
+          password: Yup.string().min(6, 'Mínimo de 6 dígitos'),
+        });
 
-      await schema.validate(data, {
-        abortEarly: false,
-      });
+        await schema.validate(data, {
+          abortEarly: false,
+        });
 
-      await api.post('users', data);
+        await api.post('users', data);
 
-      navigation.goBack();
+        navigation.goBack();
 
-      // addToast({
-      //   type: 'success',
-      //   title: 'Usuário cadastrado com sucesso',
-      //   description: 'Você já pode fazer o seu Logon no GoBarber',
-      // });
+        // addToast({
+        //   type: 'success',
+        //   title: 'Usuário cadastrado com sucesso',
+        //   description: 'Você já pode fazer o seu Logon no GoBarber',
+        // });
 
-      Alert.alert('Usuário cadastrado com sucesso', 'Você já pode fazer o seu Logon no GoBarber');
+        Alert.alert(
+          'Usuário cadastrado com sucesso',
+          'Você já pode fazer o seu Logon no GoBarber',
+        );
+      } catch (error) {
+        if (error instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(error);
+          formRef.current?.setErrors(errors);
 
-    } catch (error) {
-      if (error instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(error);
-        formRef.current?.setErrors(errors);
-
-        return;
+          return;
+        }
+        // addToast({
+        //   type: 'error',
+        //   title: 'Erro no Cadastro',
+        //   description: 'Ocorreu um erro ao fazer cadastro, tente novamente',
+        // });
+        console.log(error);
+        Alert.alert(
+          'Erro no Cadastro',
+          'Ocorreu um erro ao fazer cadastro, tente novamente',
+        );
       }
-      // addToast({
-      //   type: 'error',
-      //   title: 'Erro no Cadastro',
-      //   description: 'Ocorreu um erro ao fazer cadastro, tente novamente',
-      // });
-      console.log(error);
-      Alert.alert('Erro no Cadastro', 'Ocorreu um erro ao fazer cadastro, tente novamente');
-    }
-  // }, [addToast, history]);
-  }, [navigation]);
+      // }, [addToast, history]);
+    },
+    [navigation],
+  );
 
   return (
     <>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={ Platform.OS === 'ios' ? 'padding' : undefined }
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         enabled
       >
         <ScrollView
@@ -130,20 +153,23 @@ const SignUp: React.FC = () => {
                   formRef.current?.submitForm();
                 }}
               >
-                Entrar</Button>
+                Entrar
+              </Button>
             </Form>
-
-
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>
 
-      <BackToSignIn onPress={() => {navigation.navigate('SignIn')}}>
+      <BackToSignIn
+        onPress={() => {
+          navigation.navigate('SignIn');
+        }}
+      >
         <Icon name="arrow-left" size={20} color="#fff" />
         <BackToSignInText>Voltar p/ Logon</BackToSignInText>
       </BackToSignIn>
     </>
   );
-}
+};
 
 export default SignUp;
