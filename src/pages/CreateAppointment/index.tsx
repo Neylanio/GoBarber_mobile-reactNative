@@ -34,6 +34,11 @@ export interface Provider {
   avatar_url: string;
 }
 
+interface AvailabilityItem {
+  hour: number;
+  available: boolean;
+}
+
 const CreateAppointment: React.FC = () => {
   const route = useRoute();
   const { user } = useAuth();
@@ -41,7 +46,9 @@ const CreateAppointment: React.FC = () => {
 
   const routeParams = route.params as RouteParams;
 
+  const [availability, setAvailability] = useState<AvailabilityItem[]>([]);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [providers, setProviders] = useState<Provider[]>([]);
   const [selectedProvider, setSelectedProvider] = useState(
     routeParams.providerId,
@@ -52,6 +59,20 @@ const CreateAppointment: React.FC = () => {
       setProviders(response.data);
     });
   }, []);
+
+  useEffect(() => {
+    api
+      .get(`providers/${selectedProvider}/day-availability`, {
+        params: {
+          year: selectedDate.getFullYear(),
+          month: selectedDate.getMonth() + 1,
+          day: selectedDate.getDate(),
+        },
+      })
+      .then(response => {
+        setAvailability(response.data);
+      });
+  }, [selectedDate, selectedProvider]);
 
   const navigateToBack = useCallback(() => {
     goBack();
@@ -68,11 +89,16 @@ const CreateAppointment: React.FC = () => {
     setShowDatePicker(state => !state);
   }, []);
 
-  const handleDateChanged = useCallback(() => {
-    if (Platform.OS === 'android') {
-      setShowDatePicker(false);
-    }
-  }, []);
+  const handleDateChanged = useCallback(
+    (event: any, date: Date | undefined) => {
+      if (Platform.OS === 'android') {
+        setShowDatePicker(false);
+      }
+
+      if (date) setSelectedDate(date);
+    },
+    [],
+  );
 
   return (
     <Container>
@@ -119,7 +145,7 @@ const CreateAppointment: React.FC = () => {
             mode="date"
             onChange={handleDateChanged}
             display="calendar"
-            value={new Date()}
+            value={selectedDate}
           />
         )}
       </Calendar>
