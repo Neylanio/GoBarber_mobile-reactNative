@@ -61,12 +61,6 @@ const SignUp: React.FC = () => {
 
         navigation.goBack();
 
-        // addToast({
-        //   type: 'success',
-        //   title: 'Usuário cadastrado com sucesso',
-        //   description: 'Você já pode fazer o seu Logon no GoBarber',
-        // });
-
         Alert.alert(
           'Usuário cadastrado com sucesso',
           'Você já pode fazer o seu Logon no GoBarber',
@@ -78,18 +72,11 @@ const SignUp: React.FC = () => {
 
           return;
         }
-        // addToast({
-        //   type: 'error',
-        //   title: 'Erro no Cadastro',
-        //   description: 'Ocorreu um erro ao fazer cadastro, tente novamente',
-        // });
-        console.log(error);
         Alert.alert(
           'Erro no Cadastro',
           'Ocorreu um erro ao fazer cadastro, tente novamente',
         );
       }
-      // }, [addToast, history]);
     },
     [navigation],
   );

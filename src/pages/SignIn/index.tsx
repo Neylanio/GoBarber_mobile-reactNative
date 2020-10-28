@@ -59,14 +59,6 @@ const SignIn: React.FC = () => {
         email: data.email,
         password: data.password,
       });
-
-      // history.push('/dashboard');
-
-      // addToast({
-      //   type: 'success',
-      //   title: 'Usuário logado',
-      // });
-      // Alert.alert('Usuário logado');
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
         const errors = getValidationErrors(error);
@@ -74,18 +66,12 @@ const SignIn: React.FC = () => {
 
         return;
       }
-      // addToast({
-      //   type: 'error',
-      //   title: 'Erro na Autenticação',
-      //   description: 'Ocorreu um erro ao fazer login, verifique as credenciais',
-      // });
 
       Alert.alert(
         'Erro na Autenticação',
         'Ocorreu um erro ao fazer login, verifique as credenciais',
       );
     }
-    // }, [signIn, addToast, history]);
   }, []);
 
   return (
